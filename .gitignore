@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+
+# Environment variables
+.env
+
+# Uploaded datasets
+backend/uploads/
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store
