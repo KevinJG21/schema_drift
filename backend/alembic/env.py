@@ -22,6 +22,8 @@ from app.database.database import Base
 from app.models.dataset import Dataset
 from app.models.schema_version import SchemaVersion
 
+from app.models.drift_result import DriftResult
+
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
