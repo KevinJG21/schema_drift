@@ -21,7 +21,26 @@ def get_datatype(series):
 
 def capture_schema(file_path):
 
-    df = pd.read_csv(file_path)
+    try:
+        df = pd.read_csv(file_path)
+
+    except FileNotFoundError:
+        raise ValueError("Uploaded file could not be found.")
+
+    except pd.errors.EmptyDataError:
+        raise ValueError("Uploaded CSV file is empty.")
+
+    except pd.errors.ParserError:
+        raise ValueError("Uploaded CSV file is malformed.")
+
+    except Exception as e:
+        raise ValueError(f"Could not read CSV file: {str(e)}")
+
+    if df.empty:
+        raise ValueError("Uploaded CSV contains no data.")
+
+    if len(df.columns) == 0:
+        raise ValueError("Uploaded CSV contains no columns.")
 
     columns = df.columns
 
@@ -31,9 +50,8 @@ def capture_schema(file_path):
 
         datatype = get_datatype(df[column])
 
-
         nullable = bool(df[column].isnull().any())
-        
+
         schema[column] = {
             "datatype": datatype,
             "nullable": nullable
