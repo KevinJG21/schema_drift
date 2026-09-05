@@ -3,6 +3,7 @@ from app.models.schema_version import SchemaVersion
 from app.services.schema_capture import capture_schema
 from app.services.schema_comparator import compare_schemas
 from app.models.drift_result import DriftResult
+from app.services.slack_notifier import send_slack_alert
 
 def get_or_create_dataset(db, dataset_name):
 
@@ -106,6 +107,11 @@ def process_dataset(db, dataset_name, file_path):
             db.add(drift)
 
         db.commit()
+
+        send_slack_alert(
+                    dataset_name=dataset.name,
+                    changes=drift_result["changes"]
+                )
 
         return {
             "dataset": dataset.name,

@@ -49,7 +49,9 @@ x-airflow-common:
   # In order to add custom dependencies or upgrade provider distributions you can use your extended image.
   # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
   # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
-  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:3.3.1}
+  build:
+    context: .
+    dockerfile: Dockerfile
   # build: .
   env_file:
     - ${ENV_FILE_PATH:-.env}
@@ -67,6 +69,7 @@ x-airflow-common:
     AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW__API_AUTH__JWT_SECRET:-airflow_jwt_secret}
     AIRFLOW__API_AUTH__JWT_ISSUER: ${AIRFLOW__API_AUTH__JWT_ISSUER:-airflow}
     DATABASE_URL: postgresql://schema_user:schema_password@schema_drift_postgres:5432/schema_drift_db
+    SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL}
     # yamllint disable rule:line-length
     # Use simple http server on scheduler for health checks
     # See https://airflow.apache.org/docs/apache-airflow/stable/administration-and-deployment/logging-monitoring/check-health.html#scheduler-health-check-server
