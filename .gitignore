@@ -16,5 +16,10 @@ backend/uploads/
 # IDE
 .vscode/
 
+
+
 # OS
 .DS_Store
+
+# Airflow runtime logs
+airflow/logs/
