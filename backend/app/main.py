@@ -78,7 +78,7 @@ def check_dataset(
         upload_dir = Path("uploads")
         upload_dir.mkdir(parents=True, exist_ok=True)
 
-        file_path = upload_dir / filename
+        afile_path = upload_dir / filename
 
         with open(file_path, "wb") as buffer:
             buffer.write(file.file.read())

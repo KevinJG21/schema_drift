@@ -2,15 +2,14 @@
 #automatically generates sql queries for us. It follows ORM ie. Object Relational Mapping. 
 
 
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base  #session maker creates a session for us which helps us to interact with the db. 
                                                         #declarative base is a base class for our models. It helps us to create tables in the db.
 
 
-DATABASE_URL = (      #tells us where the database is located and how to connect to it. It contains the username, password, host, port and database name.
-    "postgresql://schema_user:"
-    "schema_password@localhost:5433/"
-    "schema_drift_db"
+DATABASE_URL = os.getenv(      #tells us where the database is located and how to connect to it. It contains the username, password, host, port and database name.
+    "DATABASE_URL", "postgresql://schema_user:schema_password@localhost:5433/schema_drift_db"
 )
 
 
