@@ -1,26 +1,19 @@
-from fileinput import filename
+from pathlib import Path
 
 from fastapi import FastAPI, Depends, UploadFile, File, HTTPException
-from app.database.database import SessionLocal
-from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from app.services.schema_version_service import process_dataset
-
-from app.schemas.drift import DatasetCheckResponse
+from app.database.database import SessionLocal
 from app.models.dataset import Dataset
-from app.schemas.drift import DatasetCheckResponse, DatasetResponse
-
 from app.models.schema_version import SchemaVersion
+from app.models.drift_result import DriftResult
+from app.services.schema_version_service import process_dataset
 from app.schemas.drift import (
     DatasetCheckResponse,
     DatasetResponse,
     SchemaVersionResponse,
     DriftResultResponse
 )
-
-from app.models.drift_result import DriftResult
-from pathlib import Path
 
 
 app = FastAPI(
@@ -73,12 +66,18 @@ def check_dataset(
                 detail="Only CSV files are supported."
             )
 
-        filename = Path(file.filename).name
+        dataset_name = Path(dataset_name).name
 
-        upload_dir = Path("uploads")
+        if not dataset_name or dataset_name in {".", ".."}:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid dataset name."
+            )
+
+        file_path = Path("uploads") / f"{dataset_name}.csv"
+
+        upload_dir = file_path.parent
         upload_dir.mkdir(parents=True, exist_ok=True)
-
-        afile_path = upload_dir / filename
 
         with open(file_path, "wb") as buffer:
             buffer.write(file.file.read())

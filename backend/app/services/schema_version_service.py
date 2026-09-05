@@ -116,3 +116,21 @@ def process_dataset(db, dataset_name, file_path):
     except Exception:
         db.rollback()
         raise
+
+def get_all_datasets(db):
+    return db.query(Dataset).order_by(
+        Dataset.name.asc()
+    ).all()
+
+def get_dataset_files(db):
+    datasets = get_all_datasets(db)
+
+    dataset_files = []
+
+    for dataset in datasets:
+        dataset_files.append({
+            "dataset_name": dataset.name,
+            "file_path": f"uploads/{dataset.name}.csv"
+        })
+
+    return dataset_files
