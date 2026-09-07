@@ -26,13 +26,12 @@ flowchart TD
     C --> D[Schema Capture]
     D --> E[Schema Comparator]
     E --> F[(PostgreSQL)]
-
     F --> G[Schema Versions]
     F --> H[Drift Results]
-
     I[Apache Airflow] --> C
     E --> J{High Severity}
     J -->|Yes| K[Slack]
+```
 
 ## Screenshots
 
