@@ -33,3 +33,21 @@ flowchart TD
     I[Apache Airflow] --> C
     E --> J{High Severity}
     J -->|Yes| K[Slack]
+
+## Screenshots
+
+### Dataset Analysis
+
+![Dataset Analysis](docs/images/dashboard.jpeg)
+
+### Version Comparison
+
+![Version Comparison](docs/images/version_compare.jpeg)
+
+### Airflow Pipeline
+
+![Airflow Pipeline](docs/images/airflow.jpeg)
+
+### Slack Alert
+
+![Slack Alert](docs/images/slack.jpeg)
