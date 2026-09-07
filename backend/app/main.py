@@ -7,13 +7,16 @@ from app.database.database import SessionLocal
 from app.models.dataset import Dataset
 from app.models.schema_version import SchemaVersion
 from app.models.drift_result import DriftResult
-from app.services.schema_version_service import process_dataset
+from app.services.schema_version_service import (
+    process_dataset
+)
 from app.schemas.drift import (
     DatasetCheckResponse,
     DatasetResponse,
     SchemaVersionResponse,
     DriftResultResponse
 )
+from app.services.schema_comparator import compare_schemas
 
 
 app = FastAPI(
@@ -162,3 +165,54 @@ def get_drift_results(
     ).all()
 
     return results
+
+@app.get("/datasets/{dataset_name}/compare")
+def compare_dataset_versions(
+    dataset_name: str,
+    version_a: int,
+    version_b: int,
+    db: Session = Depends(get_db)
+):
+    dataset = db.query(Dataset).filter(
+        Dataset.name == dataset_name
+    ).first()
+
+    if dataset is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Dataset not found."
+        )
+
+    schema_a = db.query(SchemaVersion).filter(
+        SchemaVersion.dataset_id == dataset.id,
+        SchemaVersion.version_number == version_a
+    ).first()
+
+    schema_b = db.query(SchemaVersion).filter(
+        SchemaVersion.dataset_id == dataset.id,
+        SchemaVersion.version_number == version_b
+    ).first()
+
+    if schema_a is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Version {version_a} not found."
+        )
+
+    if schema_b is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Version {version_b} not found."
+        )
+
+    comparison = compare_schemas(
+        schema_a.schema_json,
+        schema_b.schema_json
+    )
+
+    return {
+        "dataset": dataset.name,
+        "version_a": version_a,
+        "version_b": version_b,
+        "comparison": comparison
+    }

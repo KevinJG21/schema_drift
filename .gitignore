@@ -3,23 +3,35 @@ __pycache__/
 *.py[cod]
 *.pyo
 
-# Virtual environment
-venv/
+# Virtual environments
 .venv/
+venv/
+backend/venv/
 
-# Environment variables
+# Environment variables / secrets
 .env
+.env.*
+!.env.example
+backend/.env
 
 # Uploaded datasets
 backend/uploads/
 
+# Local demo datasets
+sample_data/
+
 # IDE
 .vscode/
-
-
 
 # OS
 .DS_Store
 
-# Airflow runtime logs
+# Airflow runtime files
 airflow/logs/
+airflow/airflow.db
+airflow/webserver_config.py
+
+# Python tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
